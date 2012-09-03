@@ -1,0 +1,15 @@
+html, body, #map {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.olMarkerLabel {
+	font-size: small;
+	color: black;
+	background-color: #FFFFCC;
+	width: auto;
+	padding: 1px;
+	border: 1px black solid;
+	z-index: 1000;
+}
