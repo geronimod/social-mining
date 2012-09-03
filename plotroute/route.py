@@ -34,7 +34,7 @@
 import sys
 import math
 import cairo
-from plotter import *
+# from plotter import *
 from loadOsm import *
 
 class Router:
