@@ -22,7 +22,7 @@ get '/routes.?:format?' do
   
   random_data.each do |data|
     threads << Thread.new do
-      route = `python ./vendor/plotroute/route.py #{osm_file} #{data[:origin]} #{data[:destiny]} #{data[:transport]}`
+      route = `python plotroute/route.py #{osm_file} #{data[:origin]} #{data[:destiny]} #{data[:transport]}`
       
       if route.include?('Failed')
         p "Route Failed: #{data[:origin]} #{data[:destiny]}"
