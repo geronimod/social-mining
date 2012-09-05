@@ -33,8 +33,7 @@
 #------------------------------------------------------
 import sys
 import math
-# import cairo
-from plotter import *
+# from plotter import *
 from loadOsm import *
 
 class Router:
@@ -153,7 +152,7 @@ if __name__ == "__main__":
   router = Router(data)
   result, route = router.doRouteAsLL(node_from, node_to, transport)
   
-  plot = Plotter(data.nodes) if filename is None else Plotter(data.nodes, filename)
+  # plot = Plotter(data.nodes) if filename is None else Plotter(data.nodes, filename)
   # plot.draw(node_from, node_to, route)
   # plot.simulation(node_from, node_to, route)
 
