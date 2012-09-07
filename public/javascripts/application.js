@@ -1,5 +1,5 @@
 var App = {
-  zoom: 12,
+  zoom: 13,
   
   centerLat: -37.3213732,
   centerLon: -59.1334196,
@@ -72,11 +72,16 @@ var App = {
               });
 
 
-    OSMLayer      = new OpenLayers.Layer.OSM();
-    surfaceLayer  = new Canvas.Layer("Surface");
-    subjectsLayer = new OpenLayers.Layer.Vector("Subjects", { styleMap: this.subjectSyle });
-    
-    map.addLayers([OSMLayer, surfaceLayer, subjectsLayer]);
+    OSMLayer       = new OpenLayers.Layer.OSM();
+    cloudMadeLayer = new OpenLayers.Layer.CloudMade('CloudMade', {
+                        key: '1db40c58e84d483d89a9951da9589d4e',
+                        styleId: '52535'
+                     });
+
+    surfaceLayer   = new Canvas.Layer("Traces");
+    subjectsLayer  = new OpenLayers.Layer.Vector("Subjects", { styleMap: this.subjectSyle });
+
+    map.addLayers([cloudMadeLayer, OSMLayer, subjectsLayer]);
     this.initLayers();
     
     var lonLat = new OpenLayers.LonLat(this.centerLon, this.centerLat).
@@ -136,12 +141,12 @@ var App = {
 
   addSubject: function(data) {
     var subject = new Subject({
-      color: "rgb(250,20,20)", 
+      color: this._randomColor(), 
       attributes: data
     });
 
     subject.setWayPoints(data.route);
-    subject.onmove = this.drawTrace;
+    // subject.onmove = this.drawTrace;
     subjectsLayer.addFeatures([subject.f]);
     this.subjects.push(subject);
   },
@@ -173,8 +178,8 @@ var App = {
           var lonLat = self._toLonLat(latLon);
           route.push([lonLat.lat, lonLat.lon]);
         });
-        data.route = route;
         
+        data.route = route;
         if (data.route.length > 0)
           self.addSubject(data);
       });
@@ -191,6 +196,18 @@ var App = {
                                   this.displayProjection, this.projection
                                 );
   },
+
+  _randomColor: function() {
+    var hex   = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += hex[Math.round(Math.random() * 15)];
+    }
+    return color;
+  },
+
+
+// === unused old methods =======================================================
 
   _drawPath: function(layer, data, latLons) {
     var self = this;
@@ -210,9 +227,6 @@ var App = {
       
         vectorLayer.addFeatures([feature]);
         map.addLayer(vectorLayer);
-
-
-
 
       }, 1000);      
     });
@@ -291,15 +305,6 @@ var App = {
     } catch(e) { 
       console.log(e);
     }
-  },
-
-  _randomColor: function() {
-    var hex   = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += hex[Math.round(Math.random() * 15)];
-    }
-    return color;
   },
 
   drawRandomMarkers: function() {
