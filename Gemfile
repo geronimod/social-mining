@@ -6,6 +6,6 @@ gem "rack-contrib"
 gem "rack-rewrite"
 gem "json"
 gem "nokogiri"
+gem "mormon", :git => 'git@github.com:geronimod/mormon.git'
 
-gem "ruby-debug19", :group => [:development, :test]
-# gem "ploroute", :git => 'git@github.com:geronimod/plotroute.git'
+gem "debugger", :group => [:development, :test]

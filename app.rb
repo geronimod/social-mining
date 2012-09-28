@@ -1,11 +1,12 @@
 # encoding: utf-8
-
+require "bundler/setup"
 require 'sinatra'
 require "sinatra/reloader" if development?
 require 'json'
 require './seeder'
 require 'benchmark'
-
+require 'mormon'
+require 'debugger'
 # json array of routing 
 get '/routes.?:format?' do
   # TODO read from db the routing nodes
@@ -15,20 +16,20 @@ get '/routes.?:format?' do
   random_data = []
   threads     = []
   
-  osm_file = "public/osm/tandil.osm"
-  seeder   = Seeder.new osm_file
+  osm_file   = "public/osm/tandil.osm"
+  osm_loader = Mormon::OSM::Loader.new osm_file
+  osm_router = Mormon::OSM::Router.new osm_loader
+  seeder     = Seeder.new osm_file
   
   random_data = seeder.randomize(params[:limit].to_i || 100)
   
   random_data.each do |data|
     threads << Thread.new do
-      route = `python plotroute/route.py #{osm_file} #{data[:origin]} #{data[:destiny]} #{data[:transport]}`
-      
-      if route.include?('Failed')
-        p "Route Failed: #{data[:origin]} #{data[:destiny]}"
+      response, route = osm_router.find_route data[:origin].to_i, data[:destiny].to_i, data[:transport]
+      if response != "success"
+        p "Route Failed: #{response} #{data[:origin]} #{data[:destiny]}"
       else
-        route.tr! '()','[]'
-        data[:route] = JSON.parse(route)
+        data[:route] = route
       end
     end
   end
