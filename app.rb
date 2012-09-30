@@ -1,12 +1,16 @@
 # encoding: utf-8
 require "bundler/setup"
 require 'sinatra'
-require "sinatra/reloader" if development?
 require 'json'
 require './seeder'
-require 'benchmark'
 require 'mormon'
-require 'debugger'
+
+if development?
+  require 'benchmark'
+  require "sinatra/reloader"
+  require 'debugger'
+end
+
 # json array of routing 
 get '/routes.?:format?' do
   # TODO read from db the routing nodes
@@ -17,17 +21,17 @@ get '/routes.?:format?' do
   threads     = []
   
   osm_file   = "public/osm/tandil.osm"
-  osm_loader = Mormon::OSM::Loader.new osm_file
+  osm_loader = Mormon::OSM::Loader.new osm_file #, :cache => true
   osm_router = Mormon::OSM::Router.new osm_loader
   seeder     = Seeder.new osm_file
   
-  random_data = seeder.randomize(params[:limit].to_i || 100)
+  random_data = seeder.randomize(params[:limit] && params[:limit].to_i || 100)
   
   random_data.each do |data|
     threads << Thread.new do
       response, route = osm_router.find_route data[:origin].to_i, data[:destiny].to_i, data[:transport]
       if response != "success"
-        p "Route Failed: #{response} #{data[:origin]} #{data[:destiny]}"
+        p "Route Failed: #{response} #{data[:origin]} #{data[:destiny]} #{data[:transport]}"
       else
         data[:route] = route
       end
@@ -38,6 +42,11 @@ get '/routes.?:format?' do
   random_data.to_json
 end
 
-get '/route/:from/:to.?:format?' do
-  
+get '/route/:from/:to/by/:transport.?:format?' do
+  response, route = osm_router.find_route params[:from].to_i, params[:to].to_i, params[:transport]
+  if response != "success"
+    p "Route Failed: #{response} #{data[:origin]} #{data[:destiny]}"
+  else
+    route.to_json
+  end
 end

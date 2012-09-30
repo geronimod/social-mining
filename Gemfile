@@ -6,6 +6,6 @@ gem "rack-contrib"
 gem "rack-rewrite"
 gem "json"
 gem "nokogiri"
-gem "mormon", :git => 'git@github.com:geronimod/mormon.git'
+gem "mormon"
 
 gem "debugger", :group => [:development, :test]

@@ -69,7 +69,7 @@ function Subject(options) {
     var dy = 0;
     
     if(!this.idle) {
-      var d = Math.sqrt(Math.pow((this.tx - this.x), 2) + Math.pow((this.ty - this.y),2)) + 0.1;
+      var d = Math.sqrt(Math.pow((this.tx - this.x),2) + Math.pow((this.ty - this.y),2)) + 0.1;
        
       if (d > this.v) {
         dx = this.v*(this.tx - this.x)/d;

@@ -75,7 +75,7 @@ var App = {
     OSMLayer       = new OpenLayers.Layer.OSM();
     cloudMadeLayer = new OpenLayers.Layer.CloudMade('CloudMade', {
                         key: '1db40c58e84d483d89a9951da9589d4e',
-                        styleId: '52535'
+                        styleId: '9329'//52535'
                      });
 
     surfaceLayer   = new Canvas.Layer("Traces");
