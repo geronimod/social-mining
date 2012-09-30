@@ -31,21 +31,21 @@ get '/routes.?:format?' do
   random_data = seeder.randomize(params[:limit] && params[:limit].to_i || 100)
   
   random_data.each do |data|
-    threads << Thread.new do
+    # threads << Thread.new do
       response, route = osm_router.find_route data[:origin].to_i, data[:destiny].to_i, data[:transport]
       if response != "success"
         p "Route Failed: #{response} #{data[:origin]} #{data[:destiny]} #{data[:transport]}"
       else
         data[:route] = route
       end
-    end
+    # end
   end
 
-  if development?
-    puts Benchmark.measure { threads.map &:join }
-  else
-    threads.map &:join
-  end
+  # if development?
+  #   puts Benchmark.measure { threads.map &:join }
+  # else
+  #   threads.map &:join
+  # end
   
   random_data.to_json
 end
