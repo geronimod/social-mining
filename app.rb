@@ -41,7 +41,12 @@ get '/routes.?:format?' do
     end
   end
 
-  puts Benchmark.measure { threads.map &:join }
+  if development?
+    puts Benchmark.measure { threads.map &:join }
+  else
+    threads.map &:join
+  end
+  
   random_data.to_json
 end
 
