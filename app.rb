@@ -20,9 +20,12 @@ get '/routes.?:format?' do
   random_data = []
   threads     = []
   
+  Mormon::OSM::Loader.cache_dir = "public/mormon/cache"
+  
   osm_file   = "public/osm/tandil.osm"
-  osm_loader = Mormon::OSM::Loader.new osm_file #, :cache => true
+  osm_loader = Mormon::OSM::Loader.new osm_file, :cache => true
   osm_router = Mormon::OSM::Router.new osm_loader
+  
   seeder     = Seeder.new osm_file
   
   random_data = seeder.randomize(params[:limit] && params[:limit].to_i || 100)
