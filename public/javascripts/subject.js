@@ -16,7 +16,7 @@ function Subject(options) {
   this.dy = 0;
   
   // Velocity
-  this.v = 10;
+  this.v = 3;
   
   // WayPoints alone the road from Start to Target.
   this.wps = [];

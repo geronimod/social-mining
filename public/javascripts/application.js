@@ -49,6 +49,10 @@ var App = {
 
   subjects: [],
   routes: [],
+  
+  routesTimeout: 3000,
+  subjectsTimeout: 1,
+
 
   run: function(dom_id) {
     this.initMap(dom_id);
@@ -59,7 +63,7 @@ var App = {
     map = new OpenLayers.Map(dom_id, {
                 controls:[
                   new OpenLayers.Control.Navigation(),
-                  // new OpenLayers.Control.PanZoomBar(),
+                  new OpenLayers.Control.PanZoomBar(),
                   new OpenLayers.Control.LayerSwitcher(),
                   // new OpenLayers.Control.Attribution()
                 ],
@@ -72,7 +76,7 @@ var App = {
               });
 
 
-    OSMLayer       = new OpenLayers.Layer.OSM();
+    OSMLayer       = new OpenLayers.Layer.OSM("Default");
     cloudMadeLayer = new OpenLayers.Layer.CloudMade('CloudMade', {
                         key: '1db40c58e84d483d89a9951da9589d4e',
                         styleId: '9329'//52535'
@@ -81,7 +85,9 @@ var App = {
     surfaceLayer   = new Canvas.Layer("Traces");
     subjectsLayer  = new OpenLayers.Layer.Vector("Subjects", { styleMap: this.subjectSyle });
 
-    map.addLayers([cloudMadeLayer, OSMLayer, subjectsLayer]);
+    map.addLayers([OSMLayer, cloudMadeLayer, subjectsLayer]);
+    map.setBaseLayer(cloudMadeLayer);
+
     this.initLayers();
     
     var lonLat = new OpenLayers.LonLat(this.centerLon, this.centerLat).
@@ -94,39 +100,16 @@ var App = {
     OSMLayer.id = 'OSM';
   },
 
-  canvasTest: function() {
-    // canvas test
-    ctx = surfaceLayer.canvas.getContext('2d');
-    ctx.lineCap = "square";
-
-    ctx.strokeStyle = "rgb(0,0,0)";
-    ctx.lineWidth = 100; //0.5 * (1 + (map.zoom - 8));
-    ctx.beginPath();
-    ctx.moveTo(10, 10);
-
-    ctx.lineTo(50, 50);
-    ctx.stroke();
-  },
-
-  pointTest: function() {
-    var point = new OpenLayers.Feature.Vector(
-      new OpenLayers.Geometry.Point(-59.1257229, -37.3008099).
-                     transform(this.displayProjection, this.projection),
-      { id: '', color: '#000', pointRadius: "100" }
-    );
-    
-    subjectsLayer.addFeatures([point]);
-  },
-
   initSimulation: function() {
-    // this.runTests();
-    this.drawSubjects();
-    this.getRoutes();
+    this.runTests();
+    // this.drawSubjects();
+    // this.getRoutes();
   },
 
   runTests: function() {
-    this.canvasTest();
-    this.pointTest();
+    this.routingTest();
+    // this.canvasTest();
+    // this.pointTest();
   },
 
   drawSubjects: function() {
@@ -136,7 +119,7 @@ var App = {
       subject.update();
     });
     
-    setTimeout(function(){ self.drawSubjects(); }, 1);
+    setTimeout(function(){ self.drawSubjects(); }, self.subjectsTimeout);
   },
 
   addSubject: function(data) {
@@ -188,7 +171,7 @@ var App = {
       console.log("Routes fails", resp);
     });
 
-    setTimeout(function(){ self.getRoutes(); }, 3000);
+    setTimeout(function(){ self.getRoutes(); }, self.routesTimeout);
   },
 
   _toLonLat: function(latLon) {
@@ -206,8 +189,65 @@ var App = {
     return color;
   },
 
+// Test methods 
 
-// === unused old methods =======================================================
+  routingTest: function() {
+    var self  = this,
+        start = [448193281, -37.320608, -59.1255112],
+        end   = [448193312, -37.3223495, -59.1262886];
+
+    
+    this.drawPoint(start[1], start[2]);
+    this.drawPoint(end[1], end[2]);
+
+    $.ajax("/route/" + start[0] + "/" + end[0] + "/by/cycle", {
+      dataType: 'json'
+
+    }).done(function(route){
+      var data = {};
+      
+      route = $.map(route, function(latLon, ix){ 
+        var lonLat = self._toLonLat(latLon);
+        return [[lonLat.lat, lonLat.lon]];
+      });
+      
+      if (route.length > 0) {
+        data.route = route;
+        self.addSubject(data);
+      }
+
+    }).fail(function(resp){
+      console.log("Routes fails", resp);
+    });
+
+    this.drawSubjects();
+  },
+
+  canvasTest: function() {
+    // canvas test
+    ctx = surfaceLayer.canvas.getContext('2d');
+    ctx.lineCap = "square";
+
+    ctx.strokeStyle = "rgb(0,0,0)";
+    ctx.lineWidth = 100; //0.5 * (1 + (map.zoom - 8));
+    ctx.beginPath();
+    ctx.moveTo(10, 10);
+
+    ctx.lineTo(50, 50);
+    ctx.stroke();
+  },
+
+  drawPoint: function(lat, lon) {
+    var point = new OpenLayers.Feature.Vector(
+      new OpenLayers.Geometry.Point(lon, lat).
+                     transform(this.displayProjection, this.projection),
+      { id: '', color: 'red', pointRadius: "100" }
+    );
+    
+    subjectsLayer.addFeatures([point]);
+  },
+
+// unused methods
 
   _drawPath: function(layer, data, latLons) {
     var self = this;

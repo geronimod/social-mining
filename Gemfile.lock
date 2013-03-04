@@ -1,3 +1,9 @@
+PATH
+  remote: ~/Facultad/Tesis/mormon
+  specs:
+    mormon (2.0.2)
+      nokogiri
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -12,8 +18,6 @@ GEM
     debugger-ruby_core_source (1.1.3)
     eventmachine (0.12.10)
     json (1.7.4)
-    mormon (1.0.1)
-      nokogiri
     nokogiri (1.5.5)
     rack (1.4.1)
     rack-contrib (1.1.0)
@@ -42,7 +46,7 @@ PLATFORMS
 DEPENDENCIES
   debugger
   json
-  mormon
+  mormon!
   nokogiri
   rack-contrib
   rack-rewrite
