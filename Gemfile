@@ -7,5 +7,5 @@ gem "rack-rewrite"
 gem "json"
 gem "nokogiri"
 gem "mormon", :path => "~/Facultad/Tesis/mormon"
-
+gem "haml"
 gem "debugger", :group => [:development, :test]

@@ -38,12 +38,12 @@ function Subject(options) {
   };
   
   // Feature
-  this.f = new OpenLayers.Feature.Vector(
+  this.feature = new OpenLayers.Feature.Vector(
     new OpenLayers.Geometry.Point(this.y, this.x),
     { id: '', color: this.color, pointRadius: "1" }
   );
   
-  this.f.agent = this;
+  this.feature.agent = this;
   
   this.setStart = function(p) {
     this.x = p[0];
@@ -55,13 +55,17 @@ function Subject(options) {
     this.ty = p[1];
   };
 
-  this.setWayPoints = function(wps) {
-    this.wps = wps;
+  this.setWayPoints = function() {
+    this.wps = this.attributes.route;
     this.setStart(this.wps[0]);
     this.setTarget(this.wps[1]);
     this.wp_index = 1;
   };
   
+  this.init = function() {
+    this.setWayPoints();
+  }
+
   this.onmove = function(a, o, d){};
   
   this.update = function() {
@@ -108,8 +112,8 @@ function Subject(options) {
       this.dx = dx;
       this.dy = dy;
       
-      if (this.f.layer.visibility) {
-        this.f.move(new OpenLayers.LonLat(this.y, this.x));
+      if (this.feature.layer.visibility) {
+        this.feature.move(new OpenLayers.LonLat(this.y, this.x));
       }
       
       this.onmove(this, origin, destination);

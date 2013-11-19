@@ -55,8 +55,14 @@ var App = {
 
 
   run: function(dom_id) {
+    var bootstrap = window.bootstrap || {};
+
     this.initMap(dom_id);
-    this.initSimulation();
+    
+    if (bootstrap.test)
+      this.runTests();
+    else
+      this.initSimulation();
   },
   
   initMap: function(dom_id) {
@@ -101,9 +107,8 @@ var App = {
   },
 
   initSimulation: function() {
-    this.runTests();
-    // this.drawSubjects();
-    // this.getRoutes();
+    this.drawSubjects();
+    this.getRoutes();
   },
 
   runTests: function() {
@@ -128,9 +133,9 @@ var App = {
       attributes: data
     });
 
-    subject.setWayPoints(data.route);
+    subject.init();
     // subject.onmove = this.drawTrace;
-    subjectsLayer.addFeatures([subject.f]);
+    subjectsLayer.addFeatures([subject.feature]);
     this.subjects.push(subject);
   },
 
@@ -192,35 +197,31 @@ var App = {
 // Test methods 
 
   routingTest: function() {
-    var self  = this,
-        start = [448193281, -37.320608, -59.1255112],
-        end   = [448193312, -37.3223495, -59.1262886];
+    var self = this;
 
-    
-    this.drawPoint(start[1], start[2]);
-    this.drawPoint(end[1], end[2]);
-
-    $.ajax("/route/" + start[0] + "/" + end[0] + "/by/cycle", {
+    $.ajax("/routing_test", {
       dataType: 'json'
 
-    }).done(function(route){
-      var data = {};
-      
-      route = $.map(route, function(latLon, ix){ 
-        var lonLat = self._toLonLat(latLon);
-        return [[lonLat.lat, lonLat.lon]];
-      });
-      
-      if (route.length > 0) {
+    }).done(function(routes){
+      $(routes).each(function(ix, data){
+        var route = [];
+        $(data.route).each(function(ix, latLon){ 
+          var lonLat = self._toLonLat(latLon);
+          route.push([lonLat.lat, lonLat.lon]);
+        });
+        
         data.route = route;
-        self.addSubject(data);
-      }
+        if (data.route.length > 0)
+          self.addSubject(data);
+      });
 
     }).fail(function(resp){
       console.log("Routes fails", resp);
     });
 
     this.drawSubjects();
+
+    // setTimeout(function(){ self.routingTest() }, this.routesTimeout);
   },
 
   canvasTest: function() {
