@@ -9,7 +9,7 @@ require 'haml'
 if development?
   require 'benchmark'
   require "sinatra/reloader"
-  require 'debugger'
+  require 'byebug'
 end
 
 before do
@@ -25,18 +25,18 @@ get '/' do
   haml :index, :format => :html5
 end
 
-# json array of routing 
+# json array of routing
 get '/routes.?:format?' do
   # TODO read from db the routing nodes
   content_type :json
-  
+
   routes      = []
   random_data = []
   threads     = []
-  
+
   seeder = Seeder.new @osm_file
   random_data = seeder.randomize(params[:limit] && params[:limit].to_i || 100)
-  
+
   random_data.each do |data|
     # threads << Thread.new do
       response, route = @osm_router.find_route data[:origin], data[:destiny], data[:transport]

@@ -1,16 +1,16 @@
 var App = {
   zoom: 13,
-  
+
   centerLat: -37.3213732,
   centerLon: -59.1334196,
 
-  minLat: -37.331376800537, 
+  minLat: -37.331376800537,
   maxLat: -37.31137298584,
   minLon: -59.143422851562,
   maxLon: -59.123419036865,
-  
+
   defaultIconUrl: 'http://www.openlayers.org/dev/img/marker.png',
-  defaultIcon: new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', 
+  defaultIcon: new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png',
                 new OpenLayers.Size(21,25)),
   checkIcon: new OpenLayers.Icon('images/check-icon.png', new OpenLayers.Size(20,34)),
 
@@ -33,7 +33,7 @@ var App = {
       labelXOffset: "0",
       labelYOffset: "${yOff}"
     },
-    
+
     'hover': {
       strokeWidth: 1,
       pointRadius: 6,
@@ -49,7 +49,7 @@ var App = {
 
   subjects: [],
   routes: [],
-  
+
   routesTimeout: 3000,
   subjectsTimeout: 1,
 
@@ -58,13 +58,13 @@ var App = {
     var bootstrap = window.bootstrap || {};
 
     this.initMap(dom_id);
-    
+
     if (bootstrap.test)
       this.runTests();
     else
       this.initSimulation();
   },
-  
+
   initMap: function(dom_id) {
     map = new OpenLayers.Map(dom_id, {
                 controls:[
@@ -82,23 +82,23 @@ var App = {
               });
 
 
-    OSMLayer       = new OpenLayers.Layer.OSM("Default");
-    cloudMadeLayer = new OpenLayers.Layer.CloudMade('CloudMade', {
-                        key: '1db40c58e84d483d89a9951da9589d4e',
-                        styleId: '9329'//52535'
-                     });
+    OSMLayer    = new OpenLayers.Layer.OSM("Default");
+    mapBoxLayer = new OpenLayers.Layer.MapBox('MapBox', {
+                        token: 'pk.eyJ1IjoiZ2Vyb25pbW9kaWF6IiwiYSI6InBxM0VOWGcifQ.b_GMIU0yaqDQWqtt3XAR7w',
+                        mapId: 'geronimodiaz.l4bi6pep'
+                      });
 
     surfaceLayer   = new Canvas.Layer("Traces");
     subjectsLayer  = new OpenLayers.Layer.Vector("Subjects", { styleMap: this.subjectSyle });
 
-    map.addLayers([OSMLayer, cloudMadeLayer, subjectsLayer]);
-    map.setBaseLayer(cloudMadeLayer);
+    map.addLayers([OSMLayer, mapBoxLayer, subjectsLayer]);
+    map.setBaseLayer(mapBoxLayer);
 
     this.initLayers();
-    
+
     var lonLat = new OpenLayers.LonLat(this.centerLon, this.centerLat).
                      transform(this.displayProjection, this.projection);
-    
+
     map.setCenter(lonLat, this.zoom);
   },
 
@@ -123,13 +123,13 @@ var App = {
     $(this.subjects).each(function(ix, subject){
       subject.update();
     });
-    
+
     setTimeout(function(){ self.drawSubjects(); }, self.subjectsTimeout);
   },
 
   addSubject: function(data) {
     var subject = new Subject({
-      color: this._randomColor(), 
+      color: this._randomColor(),
       attributes: data
     });
 
@@ -142,7 +142,7 @@ var App = {
   drawTrace: function(subject, origin, destiny) {
     pixel1 = surfaceLayer.geoToPixel(origin.y, origin.x);
     pixel  = surfaceLayer.geoToPixel(destiny.y, destiny.x);
-    
+
     ctx.globalAlpha = 0.2;
     ctx.strokeStyle = "#2103b5";
     ctx.lineWidth = 0.5 * (1 + (map.zoom - 8));
@@ -162,11 +162,11 @@ var App = {
     }).done(function(routes){
       $(routes).each(function(ix, data){
         var route = [];
-        $(data.route).each(function(ix, latLon){ 
+        $(data.route).each(function(ix, latLon){
           var lonLat = self._toLonLat(latLon);
           route.push([lonLat.lat, lonLat.lon]);
         });
-        
+
         data.route = route;
         if (data.route.length > 0)
           self.addSubject(data);
@@ -194,7 +194,7 @@ var App = {
     return color;
   },
 
-// Test methods 
+// Test methods
 
   routingTest: function() {
     var self = this;
@@ -205,11 +205,11 @@ var App = {
     }).done(function(routes){
       $(routes).each(function(ix, data){
         var route = [];
-        $(data.route).each(function(ix, latLon){ 
+        $(data.route).each(function(ix, latLon){
           var lonLat = self._toLonLat(latLon);
           route.push([lonLat.lat, lonLat.lon]);
         });
-        
+
         data.route = route;
         if (data.route.length > 0)
           self.addSubject(data);
@@ -244,7 +244,7 @@ var App = {
                      transform(this.displayProjection, this.projection),
       { id: '', color: 'red', pointRadius: "100" }
     );
-    
+
     subjectsLayer.addFeatures([point]);
   },
 
@@ -265,20 +265,20 @@ var App = {
           new OpenLayers.Geometry.Point(latLon.lon, latLon.lat).transform(self.displayProjection, self.projection),
           {externalGraphic: self.defaultIconUrl, graphicHeight: 25, graphicWidth: 20
         });
-      
+
         vectorLayer.addFeatures([feature]);
         map.addLayer(vectorLayer);
 
-      }, 1000);      
+      }, 1000);
     });
-    
+
 
     // var vectorLayer = new OpenLayers.Layer.Vector(data.name);
     // var feature = new OpenLayers.Feature.Vector(
     //   new OpenLayers.Geometry.Point(lon, lat).transform(self.displayProjection, self.projection),
     //   {vcid: lon+lat },
     //   {externalGraphic: self.defaultIconUrl, graphicHeight: 25, graphicWidth: 20});
-      
+
     // vectorLayer.addFeatures([feature]);
     // map.addLayer(vectorLayer);
 
@@ -291,10 +291,10 @@ var App = {
     //   new OpenLayers.Geometry.Point(lon, lat).transform(self.displayProjection, self.projection),
     //   {vcid: lon+lat },
     //   {externalGraphic: self.defaultIconUrl, graphicHeight: 25, graphicWidth: 20});
-      
+
     // vectorLayer.addFeatures([feature]);
     // map.addLayer(vectorLayer);
-      
+
   },
 
   __drawPath: function(data, points) {
@@ -322,7 +322,7 @@ var App = {
         labelOutlineColor: "white",
         labelOutlineWidth: 3
       }}),
-      
+
       renderers: renderer
     });
 
@@ -337,13 +337,13 @@ var App = {
       fontColor: 'black', //this.randomColor(),
       align: "cm"
     };
-    
+
     vector.addFeatures([pathFeature]);
-    
-    try { 
+
+    try {
       map.addLayer(vector);
       console.log(data.name + ' added');
-    } catch(e) { 
+    } catch(e) {
       console.log(e);
     }
   },
@@ -357,9 +357,9 @@ var App = {
 
       var lat = ran1 * this.maxLat + (1 - ran1) * this.minLat;
       var lon = ran2 * this.maxLon + (1 - ran2) * this.minLon;
-    
-      latLons.push([lat,lon]); 
-    }  
+
+      latLons.push([lat,lon]);
+    }
 
     function draw(self, ix_key) {
       if (ix_key < 0) return;
@@ -370,16 +370,16 @@ var App = {
       // var lonLat = new OpenLayers.LonLat(lon, lat).transform(
       //                                     self.displayProjection, self.projection
       //                                   );
-      
+
       var vectorLayer = new OpenLayers.Layer.Vector("Marker " + ix_key);
       var feature = new OpenLayers.Feature.Vector(
                     new OpenLayers.Geometry.Point(lon, lat).transform(self.displayProjection, self.projection),
                         {vcid: lon+lat },
                         {externalGraphic: self.defaultIconUrl, graphicHeight: 25, graphicWidth: 20});
-      
+
       vectorLayer.addFeatures([feature]);
       map.addLayer(vectorLayer);
-      
+
       setTimeout((function(self, ix_key) {
         return function() { draw(self, --ix_key) }
       })(self, ix_key, 0));
@@ -390,5 +390,5 @@ var App = {
 
   }
 
-  
+
 };

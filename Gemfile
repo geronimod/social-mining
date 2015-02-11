@@ -6,6 +6,6 @@ gem "rack-contrib"
 gem "rack-rewrite"
 gem "json"
 gem "nokogiri"
-gem "mormon", :path => "~/Facultad/Tesis/mormon"
+gem "mormon", :path => "../mormon"
 gem "haml"
-gem "debugger", :group => [:development, :test]
+gem "byebug", :group => [:development, :test]
