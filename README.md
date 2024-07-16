@@ -1,9 +1,9 @@
-Social Mining - Reality simulation with OSM, Mormon and OpenLayers
+Social Mining - Reality simulation with OSM, OpenLayers and Mormon
 =============
 
-Thesis project using sinatra as back-end service serving routes from OSM database 
+This project uses sinatra as backend serving routes from OSM database
 via [Mormon](https://github.com/geronimod/mormon) OSM Router (ruby based) and
-[OpenLayers](http://openlayers.org/) library as front-end.
+[OpenLayers](https://openlayers.org/) library as frontend.
 
-[See how it works](http://social-mining.herokuapp.com/)
+[See how it works](https://social-mining-production.up.railway.app/)
 

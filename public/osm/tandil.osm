@@ -6,7 +6,7 @@
     <tag k='is_in:state' v='Buenos Aires' />
     <tag k='name' v='Tandil' />
     <tag k='place' v='city' />
-    <tag k='source_ref' v='http://earth-info.nga.mil/gns/html/cntyfile/ar.zip' />
+    <tag k='source_ref' v='https://earth-info.nga.mil/gns/html/cntyfile/ar.zip' />
   </node>
   <node id='246682730' timestamp='2010-12-10T12:32:17Z' uid='22005' user='zorko' visible='true' version='8' changeset='6604712' lat='-37.3346497' lon='-59.0710983' />
   <node id='246682731' timestamp='2010-12-10T12:32:24Z' uid='22005' user='zorko' visible='true' version='3' changeset='6604712' lat='-37.3358067' lon='-59.0690286' />
@@ -5601,7 +5601,7 @@
   <node id='1356732095' timestamp='2011-07-12T20:58:03Z' uid='51045' user='Geogast' visible='true' version='2' changeset='8707278' lat='-37.3094323' lon='-59.1697691'>
     <tag k='name' v='Cerro La Movediza' />
     <tag k='natural' v='peak' />
-    <tag k='wikipedia' v='http://es.wikipedia.org/wiki/Piedra_movediza_de_Tandil' />
+    <tag k='wikipedia' v='https://es.wikipedia.org/wiki/Piedra_movediza_de_Tandil' />
   </node>
   <node id='1356750527' timestamp='2011-07-10T15:45:09Z' uid='211657' user='pablopareja' visible='true' version='1' changeset='8684543' lat='-37.3014612' lon='-59.1694049' />
   <node id='1356750530' timestamp='2011-07-10T15:45:09Z' uid='211657' user='pablopareja' visible='true' version='1' changeset='8684543' lat='-37.3083054' lon='-59.1599421' />
@@ -9516,7 +9516,7 @@
     <tag k='ele' v='298' />
     <tag k='name' v='Cerro El Centinella' />
     <tag k='natural' v='peak' />
-    <tag k='wikipedia' v='http://es.wikipedia.org/wiki/El_Centinela_(Buenos_Aires)' />
+    <tag k='wikipedia' v='https://es.wikipedia.org/wiki/El_Centinela_(Buenos_Aires)' />
   </node>
   <node id='1527731593' timestamp='2012-03-29T14:27:17Z' uid='79602' user='Gonzalo Perez' visible='true' version='7' changeset='11139438' lat='-37.3557084' lon='-59.1724423'>
     <tag k='historic' v='monument' />

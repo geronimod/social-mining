@@ -1,47 +1,47 @@
 
-/* 
- * This code is based on Heatmap by Bjoern Hoehrmann http://www.websitedev.de/temp/openlayers-heatmap-layer.html:
+/*
+ * This code is based on Heatmap by Bjoern Hoehrmann https://www.websitedev.de/temp/openlayers-heatmap-layer.html:
  *
- * Copyright (c) 2010 Bjoern Hoehrmann <http://bjoern.hoehrmann.de/>.
+ * Copyright (c) 2010 Bjoern Hoehrmann <https://bjoern.hoehrmann.de/>.
  * This module is licensed under the same terms as OpenLayers itself.
  *
  */
- 
+
 Canvas = {};
 Canvas.Layer = OpenLayers.Class(OpenLayers.Layer, {
 
-  /** 
-   * APIProperty: isBaseLayer 
-   * {Boolean} Canvas layer is never a base layer.  
+  /**
+   * APIProperty: isBaseLayer
+   * {Boolean} Canvas layer is never a base layer.
    */
   isBaseLayer: false,
 
 
-  /** 
+  /**
    * Property: cache
    * {Object} Hashtable with CanvasGradient objects
    */
   cache: null,
 
-  /** 
+  /**
    * Property: gradient
    * {Array(Number)} RGBA gradient map used to colorize the intensity map.
    */
   gradient: null,
 
-  /** 
+  /**
    * Property: canvas
    * {DOMElement} Canvas element.
    */
   canvas: null,
 
-  /** 
+  /**
    * APIProperty: defaultRadius
    * {Number} Heat source default radius
    */
   defaultRadius: null,
 
-  /** 
+  /**
    * APIProperty: defaultIntensity
    * {Number} Heat source default intensity
    */
@@ -80,19 +80,19 @@ Canvas.Layer = OpenLayers.Class(OpenLayers.Layer, {
       // i2maps.debug("Not implemented!");
       return this.map.getLonLatFromLayerPx(new OpenLayers.Pixel(x,y))
   },
-      
+
   geoToPixel: function(lat, lon) {
       // var lon2px = Math.abs(this.getExtent().getWidth()) / this.canvas.width;
       // var lat2px = Math.abs(this.getExtent().getHeight()) / this.canvas.height;
       // y = Math.round((lon + Math.abs(this.getExtent().left)) / lon2px);
       // x = (this.canvas.height-1) - Math.round((lat - Math.abs(this.getExtent().bottom)) / lat2px);
-      
+
       var p = this.map.getLayerPxFromLonLat(new OpenLayers.LonLat(lat, lon)) || {x: 0, y: 0};
       p[0] = p.x;
       p[1] = p.y;
       return p;
   },
-  
+
   colorAtGeo: function(lat, lon) {
       var p = this.geoToPixel(lat, lon);
       var ctx = this.canvas.getContext('2d');
@@ -101,28 +101,28 @@ Canvas.Layer = OpenLayers.Class(OpenLayers.Layer, {
       return "#" + rgb.toString(16);
   },
 
-  /** 
+  /**
    * Method: moveTo
    *
    * Parameters:
-   * bounds - {<OpenLayers.Bounds>} 
-   * zoomChanged - {Boolean} 
-   * dragging - {Boolean} 
+   * bounds - {<OpenLayers.Bounds>}
+   * zoomChanged - {Boolean}
+   * dragging - {Boolean}
    */
   moveTo: function(bounds, zoomChanged, dragging) {
         OpenLayers.Layer.prototype.moveTo.apply(this, arguments);
-            
+
         // The code is too slow to update the rendering during dragging.
         //if (dragging)
           //return;
-        
+
         sx = Math.abs((this.old_bounds.left - this.old_bounds.right) / (bounds.left - bounds.right));
         //if(!this.old_bounds.equals(bounds) || sx != 1)
         if(true)
         {
             ctx = this.canvas.getContext('2d');
             ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            
+
             // Pick some point on the map and use it to determine the offset
             // between the map's 0,0 coordinate and the layer's 0,0 position.
             var someLoc = new OpenLayers.LonLat(0,0);
@@ -130,7 +130,7 @@ Canvas.Layer = OpenLayers.Class(OpenLayers.Layer, {
                           this.map.getLayerPxFromLonLat(someLoc).x;
             var offsetY = this.map.getViewPortPxFromLonLat(someLoc).y -
                           this.map.getLayerPxFromLonLat(someLoc).y;
-            
+
             if(this.map.getSize().w != this.canvas.width)
             {
                     this.canvas.width = this.map.getSize().w;
@@ -145,15 +145,15 @@ Canvas.Layer = OpenLayers.Class(OpenLayers.Layer, {
             this.offsetX = offsetX;
             this.offsetY = offsetY;
             this.old_bounds = bounds;
-            
+
             if(this.draw) this.draw(this.canvas);
         }
     },
 
-  /** 
+  /**
    * APIMethod: getDataExtent
    * Calculates the max extent which includes all of the heat sources.
-   * 
+   *
    * Returns:
    * {<OpenLayers.Bounds>}
    */

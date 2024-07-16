@@ -4,7 +4,7 @@ OpenLayers.Layer.CloudMade = OpenLayers.Class(OpenLayers.Layer.TMS, {
       throw "Please provide key property in options (your API key).";
     }
         options = OpenLayers.Util.extend({
-            attribution: "Data &copy; 2009 <a href='http://openstreetmap.org/'>OpenStreetMap</a>. Rendering &copy; 2009 <a href='http://cloudmade.com'>CloudMade</a>.",
+            attribution: "Data &copy; 2009 <a href='https://openstreetmap.org/'>OpenStreetMap</a>. Rendering &copy; 2009 <a href='https://cloudmade.com'>CloudMade</a>.",
             maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
             maxResolution: 156543.0339,
             units: "m",
@@ -17,9 +17,9 @@ OpenLayers.Layer.CloudMade = OpenLayers.Class(OpenLayers.Layer.TMS, {
         }, options);
     var prefix = [options.key, options.styleId, 256].join('/') + '/';
         var url = [
-            "http://a.tile.cloudmade.com/" + prefix,
-            "http://b.tile.cloudmade.com/" + prefix,
-            "http://c.tile.cloudmade.com/" + prefix
+            "https://a.tile.cloudmade.com/" + prefix,
+            "https://b.tile.cloudmade.com/" + prefix,
+            "https://c.tile.cloudmade.com/" + prefix
         ];
         var newArguments = [name, url, options];
         OpenLayers.Layer.TMS.prototype.initialize.apply(this, newArguments);
@@ -34,7 +34,7 @@ OpenLayers.Layer.CloudMade = OpenLayers.Class(OpenLayers.Layer.TMS, {
 
         if (y < 0 || y >= limit)
         {
-            return "http://cloudmade.com/js-api/images/empty-tile.png";
+            return "https://cloudmade.com/js-api/images/empty-tile.png";
         }
         else
         {

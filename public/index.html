@@ -3,16 +3,26 @@
   <head>
     <title>Social Mining</title>
     <link href="stylesheets/application.css" media="screen, projection" rel="stylesheet" type="text/css" />
-    
-    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-    <script src="http://code.jquery.com/jquery.min.js"></script>
-    
+
+    <script src="https://openlayers.org/api/2.13.1/OpenLayers.js"></script>
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+
     <script src="javascripts/cloudmade.js"></script>
     <script src="javascripts/canvas.js"></script>
     <script src="javascripts/subject.js"></script>
     <script src="javascripts/application.js"></script>
   </head>
   <body onload="App.run('map');">
+    <p style="margin-left:10px">
+      This application is based on
+      <a href="https://www.openstreetmap.org" target="_blank">OpenStreetMap</a> &
+      <a href="https://openlayers.org" target="_blank">OpenLayers</a>.
+      It simulates 5 subjects randomly taking different routes from point
+      A to B and back. Internally the backend generates a random route using
+      `cycle` as transport and a `random` algorithm, more
+      information about it at
+      <a href="https://github.com/geronimod/mormon" target="_blank">Mormon</a>.
+    </p>
     <div id="map"></div>
   </body>
 </html>
